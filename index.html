@@ -14,7 +14,8 @@
         <h1>Exercises by Gal Luz Halevi</h1>
         <transition-group name="list" tag="ul" class="exercises-list">
             <li v-for="(exercise, index) in exercises" :key="index" class="exercise-item" @click="displayMessage(index)">
-                <a :href="'ex' + (index + 4) + '/ex' + (index + 4) + '.html'" class="exercise-link">Exercise {{ index + 4 }}</a>
+                <!-- Updated href to correctly point to the exercise files -->
+                <a :href="'ex' + exercise + '/ex' + exercise + '.html'" class="exercise-link">Exercise {{ exercise }}</a>
             </li>
         </transition-group>
         <p v-if="message">{{ message }}</p>
