@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Exercise 8</title>
+    <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Exercise 8</h1>
+
+        <!-- Question 2 -->
+        <div class="question">
+            <h3>Question 2</h3>
+
+            <div class="code">
+                <pre>
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def darker(color_channel, factor=2):
+    return int(color_channel // factor)
+
+
+def lighter(color_channel, factor=2):
+    lighter_channel = int(color_channel * factor)
+    return lighter_channel if lighter_channel <= 255 else 255
+
+
+def no_ticks(ax):
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+
+def as_greyscale(image):
+    rows, cols, _ = image.shape
+    greyscale_image = np.zeros_like(image)
+    for i in range(rows):
+        for j in range(cols):
+            mean_pixel = np.mean(image[i, j])
+            greyscale_image[i, j] = [mean_pixel] * 3
+
+    return greyscale_image
+
+
+original_image = Image.open("q2_original.jpg")
+original_image.thumbnail(size=(1028, 1028))
+
+image_as_array = np.array(original_image).astype(int)
+darker_image = np.vectorize(darker)(image_as_array)
+lighter_image = np.vectorize(lighter)(image_as_array)
+
+fig, axs = plt.subplots(2, 2, dpi=300)
+
+axs[0][0].imshow(original_image)
+axs[0][0].set_title("Original Image")
+no_ticks(axs[0][0])
+
+axs[0][1].imshow(as_greyscale(image_as_array))
+axs[0][1].set_title("Greyscale Image")
+no_ticks(axs[0][1])
+
+axs[1][0].imshow(darker_image)
+axs[1][0].set_title("Darker Image")
+no_ticks(axs[1][0])
+
+axs[1][1].imshow(lighter_image)
+axs[1][1].set_title("Lighter Image")
+no_ticks(axs[1][1])
+
+plt.show()
+                </pre>
+            </div>
+            <!-- Output for Question 2 -->
+            <div class="output">
+                <figure>
+                    <img src="q2_original.jpg" alt="Original Image for Question 2">
+                    <figcaption>Original Image for Question 2</figcaption>
+                </figure>
+                <figure>
+                    <img src="q2.png" alt="Output Image for Question 2">
+                    <figcaption>Output Image for Question 2</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question">
+            <h3>Question 3</h3>
+            <div class="code">
+                <pre>
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define color constants
+BLACK = [0, 0, 0]
+WHITE = [255, 255, 255]
+BAR = 345
+LINE_LENGTH = 8.5
+
+def find_pixel_cm_ratio(canvas, x_min, x_max, y_min, y_max):
+    """
+    Function to find the ratio of pixels to centimeters in the image.
+
+    Parameters:
+    canvas (numpy.ndarray): The image as a numpy array.
+    x_min, x_max, y_min, y_max (int): The coordinates defining the area to search for the line.
+
+    Returns:
+    float: The ratio of pixels to centimeters.
+    """
+    # assume that the line is horizontal
+    search_area = canvas[y_min:y_max, x_min:x_max]
+    blacks = np.where(search_area == BLACK)
+
+    return (np.max(blacks[1]) - np.min(blacks[1])) / LINE_LENGTH
+
+
+def find_center_of_object(canvas, x_min, x_max, y_min, y_max):
+    """
+    Function to find the center of an object in the image.
+
+    Parameters:
+    canvas (numpy.ndarray): The image as a numpy array.
+    x_min, x_max, y_min, y_max (int): The coordinates defining the area to search for the object.
+
+    Returns:
+    tuple: The coordinates of the center of the object.
+    """
+    search_area = canvas[y_min:y_max, x_min:x_max]
+    blacks = np.where(search_area == BLACK)
+    x_center = (np.min(blacks[1]) + np.max(blacks[1])) // 2
+    y_center = (np.min(blacks[0]) + np.max(blacks[0])) // 2
+
+    return x_center + x_min, y_center + y_min
+
+
+def center_annotation(center):
+    """
+    Function to create an annotation for the center of an object.
+
+    Parameters:
+    center (tuple): The coordinates of the center of the object.
+
+    Returns:
+    str: The annotation text.
+    """
+    pixels_per_cm = find_pixel_cm_ratio(trimmed_image, 200, 770, 150, 300)
+    x, y = center
+
+    x_cm  = np.round(x / pixels_per_cm, 2)
+    y_cm = np.round(y / pixels_per_cm, 2)
+
+    return f'({x_cm}cm, {y_cm}cm)'
+
+# Load and process the image
+original_image = Image.open("q3_original.jpg")
+original_image.thumbnail(size=(1028, 1028))
+
+image_as_array = np.array(original_image).astype(int)
+trimmed_image = np.zeros_like(image_as_array)
+
+# Convert the image to binary
+for i in range(image_as_array.shape[0]):
+    for j in range(image_as_array.shape[1]):
+        if np.sum(image_as_array[i, j]) > BAR:
+            trimmed_image[i, j] = WHITE
+
+# Display the image
+plt.imshow(trimmed_image, cmap="gray")
+
+# Find the centers of the objects and annotate them
+coin_center = find_center_of_object(trimmed_image, 30, 250, 300, 500)
+medallion_center = find_center_of_object(trimmed_image, 220, 600, 550, 900)
+
+plt.plot(coin_center[0], coin_center[1], 'rx')
+plt.annotate(center_annotation(coin_center), (coin_center[0], coin_center[1]), textcoords="offset points", xytext=(40,20), ha='center', color='r')
+plt.plot(medallion_center[0], medallion_center[1], 'rx')
+plt.annotate(center_annotation(medallion_center), (medallion_center[0], medallion_center[1]), textcoords="offset points", xytext=(45,-60), ha='center', color='r')
+
+# Show the plot
+plt.show()
+                </pre>
+            </div>
+            <!-- Output for Question 3 -->
+            <div class="output">
+                <figure>
+                    <img src="q3_original.jpg" alt="Original Image for Question 3">
+                    <figcaption>Original Image for Question 3</figcaption>
+                </figure>
+                <figure>
+                    <img src="q3.png" alt="Output Image for Question 3">
+                    <figcaption>Output Image for Question 3</figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

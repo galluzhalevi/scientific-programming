@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 6 by Gal Luz Halevi</title>
+    <link rel="stylesheet" href="../styles.css"> <!-- Link to external CSS file -->
+</head>
+<body>
+
+<div class="container">
+    <h1>Exercise 6 by Gal Luz Halevi</h1>
+    <p>May 17, 2024</p>
+
+    <!-- Question 1 -->
+    <div class="question">
+        <h3>Question 1</h3>
+        <!-- Code for Question 1 -->
+        <div class="code">
+            <pre>import turtle
+
+START_POSITIONS = [(-110, -25),
+                   (0, -25),
+                   (110, -25),
+                   (-55, -75),
+                   (55, -75)]
+
+DEFAULT_COLORS = ['blue', 'red', 'green', 'yellow', 'black']
+
+def draw_circle(tr, color, start_position, radius=45):
+    tr.penup()
+    tr.goto(start_position)
+    tr.pendown()
+    tr.color(color)
+    tr.circle(radius)
+
+def get_colors(count):
+    colors_list = list()
+    print(f'Please enter {count} colors')
+    for i in range(count):
+        next_color = input("Enter the next color: ")
+        if next_color == '':
+            next_color = DEFAULT_COLORS[i]
+        colors_list.append(next_color)
+    return colors_list
+
+def main():
+    colors_list = get_colors(len(START_POSITIONS))
+    tr = turtle.Turtle()
+    tr.speed(7)
+    tr.shape('turtle')
+    tr.pensize(5)
+
+    for i in range(len(START_POSITIONS)):
+        draw_circle(tr, colors_list[i], START_POSITIONS[i])
+
+    turtle.Screen().exitonclick()
+
+main()</pre>
+        </div>
+        <!-- Output for Question 1 -->
+        <div class="output">
+            Please enter 5 colors<br>
+            Enter the next color: blue<br>
+            Enter the next color: green<br>
+            Enter the next color: black<br>
+            Enter the next color: yellow<br>
+            Enter the next color: red<br>
+            <img src="q1.png" alt="Output for Question 1">
+        </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question">
+        <h3>Question 2</h3>
+        <!-- Code for Question 2 -->
+        <div class="code">
+            <pre>import turtle
+import numpy as np
+
+# Define the unit of measurement for the shapes
+UNIT = 40
+
+def square_shape(principal_direction):
+    tr.pendown()
+    tr.setheading(principal_direction)
+    tr.right(45)
+    tr.begin_fill()
+
+    for _ in range(4):
+        tr.forward(UNIT)
+        tr.left(90)
+
+    tr.end_fill()
+    tr.penup()
+    tr.setheading(principal_direction)
+    tr.forward(np.sqrt(2) * UNIT)
+
+def draw_arrow_wing(scale, hand):
+    tr.pendown()
+    tr.right(hand * 135)
+    tr.forward(2 * scale * UNIT)
+    tr.left(hand * 90)
+    tr.forward(UNIT)
+    tr.left(hand * 90)
+    tr.forward((2 * scale + 1) * UNIT)
+    tr.penup()
+
+def arrow_shape(principal_direction, scale):
+    tr.setheading(principal_direction)
+    tr.forward(np.sqrt(2) * UNIT)
+    arrow_origin = tr.pos()
+    tr.begin_fill()
+
+    draw_arrow_wing(scale, 1)  # right wing
+
+    tr.goto(arrow_origin[0], arrow_origin[1])  # return to the arrow origin
+    tr.setheading(principal_direction)
+
+    draw_arrow_wing(scale, -1)  # left wing
+
+    tr.end_fill()
+    tr.penup()
+
+def move_to_next(next_direction):
+    tr.penup()
+    tr.setheading(next_direction)
+    tr.right(45)
+    tr.forward(UNIT)
+
+def goto_start():
+    tr.penup()
+    tr.setheading(180)
+    tr.forward(0.5 * np.sqrt(2) * UNIT)
+
+    tr.left(45)
+    tr.forward(7 * UNIT)
+
+# Set up the turtle
+tr = turtle.Turtle()
+tr.screen.bgcolor('#eeeeee')
+tr.shape('turtle')
+tr.screen.title('Oranim')
+tr.speed(0)
+tr.color('#074c45')
+
+goto_start()
+
+# Draw the shapes
+for direction in [90, 0, -90]:
+    square_shape(direction)
+    arrow_shape(direction, 1)
+    arrow_shape(direction, 2)
+    arrow_shape(direction, 3)
+    move_to_next(direction)
+
+tr.home()
+
+# Exit on click
+turtle.Screen().exitonclick()</pre>
+        </div>
+        <!-- Output for Question 2 -->
+        <div class="output">
+            <img src="q2.png" alt="Output for Question 2">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

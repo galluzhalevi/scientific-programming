@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises</title>
+    <!-- Import Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>Exercises by Gal Luz Halevi</h1>
+        <transition-group name="list" tag="ul" class="exercises-list">
+            <li v-for="(exercise, index) in exercises" :key="index" class="exercise-item" @click="displayMessage(index)">
+                <a :href="'ex' + (index + 4) + '/ex' + (index + 4) + '.html'" class="exercise-link">Exercise {{ index + 4 }}</a>
+            </li>
+        </transition-group>
+        <p v-if="message">{{ message }}</p>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                exercises: Array.from({ length: 6 }, (_, index) => index + 4),
+                message: ''
+            },
+            methods: {
+                displayMessage(index) {
+                    this.message = 'You clicked on Exercise ' + (index + 4);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

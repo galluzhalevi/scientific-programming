@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises</title>
+    <!-- Import Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Exercises by Gal Luz Halevi</h1>
+        <ul>
+            <!-- Use v-for directive to loop through exercises -->
+            <li v-for="(exercise, index) in exercises" :key="index">
+                <!-- Use v-bind:href directive to bind href dynamically -->
+                <a :href="'ex' + (index + 4) + '/ex' + (index + 4) + '.html'">Exercise {{ index + 4 }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // Vue app
+        new Vue({
+            el: '#app',
+            data: {
+                // Define exercises array from Exercise 4 to Exercise 10
+                exercises: Array.from({ length: 7 }, (_, index) => index + 4)
+            }
+        });
+    </script>
+</body>
+</html>
