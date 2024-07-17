@@ -1,200 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Exercise 7</title>
+    <link rel="stylesheet" type="text/css" href="../styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercise 5 by Gal Luz Halevi</title>
-    <link rel="stylesheet" href="../styles.css"> <!-- Link to external CSS file -->
 </head>
 <body>
+    <div class="container">
+        <h1>Exercise 7 - May 13, 2024</h1>
 
-<div class="container">
-    <h1>Exercise 7 by Gal Luz Halevi</h1>
-    <p>May 30, 2024</p>
-
-    <!-- Question 1 -->
-    <div class="question">
-        <h3>Question 1</h3>
-        <!-- Code for Question 1 -->
-        <div class="code">
-            <pre>
-                import tkinter as tk
-from tkinter import messagebox
-import threading
-
-# Global constant for the 15-minute interval (in seconds)
-ALERT_INTERVAL = 1 * 60
-
-# Function to show the alert window
-def show_alert():
-    window = tk.Tk()
-    window.title("Save Reminder")
-    window.geometry("300x200")
-
-    # Label with large text
-    label = tk.Label(window, text="Save your file!", font=("Helvetica", 16))
-    label.pack(pady=20)
-
-    # Continue button to set another alarm in 15 minutes
-    def continue_alarm():
-        window.destroy()
-        schedule_alert()
-
-    # Stop button to end the process
-    def stop_alarm():
-        window.destroy()
-        global running
-        running = False
-
-    button_frame = tk.Frame(window)
-    button_frame.pack(pady=10)
-
-    continue_button = tk.Button(button_frame, text="Continue", command=continue_alarm)
-    continue_button.grid(row=0, column=0, padx=10)
-
-    stop_button = tk.Button(button_frame, text="Stop", command=stop_alarm)
-    stop_button.grid(row=0, column=1, padx=10)
-
-    window.mainloop()
-
-# Function to schedule the alert every 15 minutes
-def schedule_alert():
-    if running:
-        threading.Timer(ALERT_INTERVAL, show_alert).start()
-
-# Main function to start the alert schedule
-if __name__ == "__main__":
-    running = True
-    schedule_alert()
-            </pre>
-        </div>
-        <!-- Output for Question 1 -->
-        <div class="output">
-            Area of 60 degrees, 10 cm is 0.0052 m^2<br>
-            Area of 45.0 degrees, 20 cm is 0.0157 m^2
-        </div>
-    </div>
-
-    <!-- Question 2 -->
-    <div class="question">
-        <h3>Question 2</h3>
-        <!-- Code for Question 2 -->
-        <div class="code">
-            <pre>import numpy as np
+        <!-- Question 1 -->
+        <div class="question">
+            <h3>Question 1</h3>
+            <div class="code">
+                <pre>
+import numpy as np
 import matplotlib.pyplot as plt
 
-def calc_discriminant(a, b, c):
-    return b ** 2 - 4 * a * c
 
-def draw_quadratic(a, b, c, vertex):
-    x = np.arange(vertex-10, vertex+10, 0.1)
-    y = a * (x ** 2) + b * x + c
+X, Y = np.meshgrid(np.linspace(-3, 3, 256), np.linspace(-5, 5, 256))
+Z = (1 - 0.5*X + X**5 + Y**3) * np.exp(-X**2 - Y**2)
 
-    plt.plot(x, y)
+fig, axs = plt.subplots(1, 2)
 
-def solve_quadratic(a, b, c):
-    D = calc_discriminant(a, b, c)
-    if D < 0:
-        print(f'The discriminant of the quadratic equation is {D}, which is negative. No real roots')
-        return
-    elif D == 0:
-        x = -b / (2 * a)
-        print(f'The quadratic root is {x}')
-    else:
-        x_1, x_2 = (-b + np.sqrt(D)) / (2 * a), (-b - np.sqrt(D)) / (2 * a)
-        print(f'The quadratic roots are {x_1} and {x_2}')
+pc = axs[0].pcolormesh(X, Y, Z, vmin=-1, vmax=1, cmap='RdBu_r')
+fig.colorbar(pc, ax=axs[0])
+axs[0].set_title('pcolormesh()')
 
-    draw_quadratic(a, b, c, (-b/2*a))
+co = axs[1].contour(X, Y, Z, levels=np.linspace(-1.25, 1.25, 11), colors=[
+    '#98FB98',  # PaleGreen
+    '#8FBC8F',  # DarkSeaGreen
+    '#66CDAA',  # MediumAquamarine
+    '#20B2AA',  # LightSeaGreen
+    '#5F9EA0',  # CadetBlue
+    '#4682B4',  # SteelBlue
+    '#87CEEB',  # SkyBlue
+    '#00BFFF',  # DeepSkyBlue
+    '#1E90FF',  # DodgerBlue
+    '#6495ED',  # CornflowerBlue
+    '#ADD8E6'   # LightBlue
+])
+axs[1].clabel(co, inline=True, fontsize=8)
+fig.colorbar(co, ax=axs[1])
+axs[1].set_title('contour()')
 
-solve_quadratic(1, -5, 6)
-solve_quadratic(1, -5, 30)
+plt.show()
 
-plt.grid(True)
-plt.savefig('class05_q2_plot1.png')  <!-- Image output -->
-plt.show()</pre>
+                </pre>
+            </div>
+            <!-- Output for Question 1 -->
+            <div class="output">
+                <figure>
+                    <img src="q1.png" alt="Output Image for Question 1">
+                    <figcaption>Output Image for Question 1</figcaption>
+                </figure>
+            </div>
         </div>
-        <!-- Output for Question 2 -->
-        <div class="output">
-            The quadratic roots are 3.0 and 2.0<br>
-            The discriminant of the quadratic equation is -95, which is negative. No real roots
-            <br>
-            <img src="class05_q2_plot1.png" alt="Plot for Question 2">
+
+        <!-- Question 2 -->
+        <div class="question">
+            <h3>Question 2</h3>
+            <div class="code">
+                <pre>
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = np.loadtxt(fname='motor_eff.csv', delimiter=',')
+
+# Create a figure and axis
+fig, ax = plt.subplots()
+
+# Generate the grid for the contour plot
+speed = data[0, 1:]
+torque = data[1:, 0]
+efficiency = data[1:, 1:]
+
+# Plot the filled contour
+contourf = ax.contourf(speed, torque, efficiency, levels=np.linspace(0.77, 1, 512), cmap='jet')
+
+# Add a colorbar to the plot
+cbar = fig.colorbar(contourf, ax=ax)
+cbar.set_label('Efficiency')
+
+# Add titles and labels
+ax.set_title('Motor Efficiency Filled Contour Plot')
+ax.set_xlabel('Speed')
+ax.set_ylabel('torque')
+
+# Show the plot
+plt.show()
+                </pre>
+            </div>
+            <!-- Output for Question 2 -->
+            <div class="output">
+                <figure>
+                    <img src="q2.png" alt="Output Image for Question 2">
+                    <figcaption>Output Image for Question 2</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question">
+            <h3>Question 3</h3>
+            <div class="code">
+                <pre>
+# Notice - code related to R^2 was written by chatgpt
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load data from file
+data = np.loadtxt('motor_measurements.csv', delimiter=',')
+
+# Extract unique speeds from the data
+unique_speeds = set(data[:, 0].astype(int))
+
+# Dictionary to store maximal torques for each speed
+maximal_torques_by_speed = {speed: 0 for speed in unique_speeds}
+
+# Iterate over unique speeds
+for speed in sorted(unique_speeds):
+    # Filter rows with the current speed and torque less than 7
+    filtered_rows = data[(data[:, 0] == speed) & (data[:, 2] < 7)]
+    # Compute maximal torque for the current speed
+    maximal_torques_by_speed[speed] = filtered_rows[:, 1].max()
+
+# Extract speeds and torques for plotting
+speeds = list(maximal_torques_by_speed.keys())
+torques = list(maximal_torques_by_speed.values())
+
+# Fit a polynomial curve of degree 3 to the data
+p = np.polyfit(speeds, torques, deg=3)
+
+# Generate interpolated data for plotting
+speeds_interp = np.linspace(0, 12000, (12000 // 500) + 1)
+torques_interp = np.polyval(p, speeds_interp)
+
+# Calculate R^2 value for the interpolated data
+y_mean = np.mean(torques)
+ss_total = np.sum((torques - y_mean)**2)
+ss_residual = np.sum((torques - np.polyval(p, speeds))**2)
+r_squared = 1 - (ss_residual / ss_total)
+
+# Set figure size
+plt.figure(figsize=(10, 6))
+
+# Plot original and interpolated data
+plt.scatter(speeds, torques, marker='o', color='blue', label='Original Data')
+plt.scatter(speeds_interp, torques_interp, marker='x', color='green', label='Interpolated Data')
+plt.xlabel('Speed')
+plt.ylabel('Maximal Torque')
+plt.title('Maximal Torque vs Speed')
+
+# Add R^2 label to the plot
+plt.text(0.95, 0.95, f'$R^2 = {r_squared:.4f}$', ha='right', va='top', transform=plt.gca().transAxes, fontsize=12)
+
+plt.legend()
+
+# Set grid density and style
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+plt.minorticks_on()
+plt.show()
+                </pre>
+            </div>
+            <!-- Output for Question 3 -->
+            <div class="output">
+                <figure>
+                    <img src="q3.png" alt="Output Image for Question 3">
+                    <figcaption>Output Image for Question 3</figcaption>
+                </figure>
+            </div>
         </div>
     </div>
-
-    <!-- Question 3 -->
-    <div class="question">
-        <h3>Question 3</h3>
-        <!-- Code for Question 3 -->
-        <div class="code">
-            <pre>from typing import List
-
-# Function to create Pascal's triangle up to nth row
-def create_pascal_triangle(n):
-    # Initialize Pascal's triangle with first two rows
-    pascal_triangle = [[1], [1, 1]]
-
-    # Iterate to generate subsequent rows
-    for i in range(1, n - 1):
-        pascal_triangle.append(pascal_row(pascal_triangle[i]))
-
-    return pascal_triangle
-
-# Function to generate a row of Pascal's triangle based on the previous row
-def pascal_row(last_row: List[int]):
-    # Calculate values for the new row based on the previous row
-    return [1] + [last_row[j] + last_row[j + 1] for j in range(len(last_row) - 1)] + [1]
-
-# Function to print Pascal's triangle
-def pascal_print(triangle: List[list]):
-    # Iterate over each row and print it
-    for row in triangle:
-        print(row, end=' | ')
-        print(f'row sum = {sum(row)}')
-
-# Create Pascal's triangle with 10 rows and print it
-pascal_print(create_pascal_triangle(10))</pre>
-        </div>
-        <!-- Output for Question 3 -->
-        <div class="output">
-            [1] | row sum = 1<br>
-            [1, 1] | row sum = 2<br>
-            [1, 2, 1] | row sum = 4<br>
-            [1, 3, 3, 1] | row sum = 8<br>
-            [1, 4, 6, 4, 1] | row sum = 16<br>
-            [1, 5, 10, 10, 5, 1] | row sum = 32<br>
-            [1, 6, 15, 20, 15, 6, 1] | row sum = 64<br>
-            [1, 7, 21, 35, 35, 21, 7, 1] | row sum = 128<br>
-            [1, 8, 28, 56, 70, 56, 28, 8, 1] | row sum = 256<br>
-            [1, 9, 36, 84, 126, 126, 84, 36, 9, 1] | row sum = 512<br>
-        </div>
-    </div>
-
-    <!-- Proof for Question 3 -->
-    <div class="question">
-        <h3>Proof</h3>
-        <!-- Proof for Question 3 -->
-        <div class="proof">
-            <pre>Base: n = 2
-    pascal_triangle[2] = [1, 1]
-    sum(pascal_triangle[2]) = sum([1, 1]) = 2
-     = 2^1 = 2^(n-1)
-
-Hypothesis:
-    for some n, sum(pascal_triangle[n]) = 2 ^ (n-1)
-
-Step:
-    We need to prove that sum(pascal_triangle[n+1]) = 2 ^ n
-    lets call row_n = pascal_triangle[n]
-    sum(pascal_triangle[n+1])
-        = (0 + row_n[0]) + (row_n[0] + row_n[1]) + ... + (row_n[n-1] + row_n[n]) + (row_n[n] +0)
-        = 2*row_n[0] + 2*row_n[1] + ... + 2*row_n[n]
-        = 2 * sum(row_n)
-
-Q.E.D</pre>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
